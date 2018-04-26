@@ -1,25 +1,70 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { react2angular } from 'react2angular/index.es2015';
 
-import treeherder from '../../../../js/treeherder';
 import ErrorsList from './ErrorsList';
 import SuggestionsListItem from './SuggestionsListItem';
 import ListItem from './ListItem';
+import { isReftest } from "../../../../helpers/job";
+import intermittentTemplate from '../../../../partials/main/intermittent.html';
+import { thEvents } from '../../../../js/constants';
+import { getBugUrl } from '../../../../helpers/url';
 
-class FailureSummaryTab extends React.Component {
+
+export default class FailureSummaryTab extends React.Component {
   constructor(props) {
     super(props);
 
     const { $injector } = this.props;
     this.$timeout = $injector.get('$timeout');
-    this.thPinboard = $injector.get('thPinboard');
+    this.$uibModal = $injector.get('$uibModal');
+    this.$rootScope = $injector.get('$rootScope');
+  }
+
+  fileBug(suggestion) {
+    const { suggestions, jobLogUrls, lvFullUrl, selectedJob, reftestUrl, addBug, pinJob } = this.props;
+    const summary = suggestion.search;
+    const crashRegex = /application crashed \[@ (.+)\]$/g;
+    const crash = summary.match(crashRegex);
+    const crashSignatures = crash ? [crash[0].split("application crashed ")[1]] : [];
+    const allFailures = suggestions.map(sugg => (sugg.search.split(" | ")));
+
+    const modalInstance = this.$uibModal.open({
+      template: intermittentTemplate,
+      controller: 'BugFilerCtrl',
+      size: 'lg',
+      openedClass: "filer-open",
+      resolve: {
+        summary: () => (summary),
+        search_terms: () => (suggestion.search_terms),
+        fullLog: () => (jobLogUrls[0].url),
+        parsedLog: () => (lvFullUrl),
+        reftest: () => (isReftest(selectedJob) ? reftestUrl : ""),
+        selectedJob: () => (selectedJob),
+        allFailures: () => (allFailures),
+        crashSignatures: () => (crashSignatures),
+        successCallback: () => (data) => {
+          // Auto-classify this failure now that the bug has been filed
+          // and we have a bug number
+          addBug({ id: data.success });
+          this.$rootScope.$evalAsync(
+            this.$rootScope.$emit(
+              thEvents.saveClassification));
+          // Open the newly filed bug in a new tab or window for further editing
+          window.open(getBugUrl(data.success));
+        }
+      }
+    });
+    pinJob(selectedJob);
+
+    modalInstance.opened.then(function () {
+      window.setTimeout(() => modalInstance.initiate(), 0);
+    });
   }
 
   render() {
     const {
-      fileBug, jobLogUrls, logParseStatus, suggestions, errors,
-      bugSuggestionsLoading, selectedJob
+      jobLogUrls, logParseStatus, suggestions, errors,
+      bugSuggestionsLoading, selectedJob, addBug
     } = this.props;
     const logs = jobLogUrls;
     const jobLogsAllParsed = logs.every(jlu => (jlu.parse_status !== 'pending'));
@@ -31,10 +76,9 @@ class FailureSummaryTab extends React.Component {
             key={index}  // eslint-disable-line react/no-array-index-key
             index={index}
             suggestion={suggestion}
-            fileBug={fileBug}
-            pinboardService={this.thPinboard}
+            toggleBugFiler={() => this.fileBug(suggestion)}
             selectedJob={selectedJob}
-            $timeout={this.$timeout}
+            addBug={addBug}
           />))}
 
         {!!errors.length &&
@@ -82,25 +126,25 @@ class FailureSummaryTab extends React.Component {
 
 FailureSummaryTab.propTypes = {
   $injector: PropTypes.object.isRequired,
-  fileBug: PropTypes.func.isRequired,
+  addBug: PropTypes.func.isRequired,
+  pinJob: PropTypes.func.isRequired,
   suggestions: PropTypes.array,
   selectedJob: PropTypes.object,
   errors: PropTypes.array,
   bugSuggestionsLoading: PropTypes.bool,
   jobLogUrls: PropTypes.array,
   logParseStatus: PropTypes.string,
+  reftestUrl: PropTypes.string,
+  lvFullUrl: PropTypes.string,
 };
 
 FailureSummaryTab.defaultProps = {
   suggestions: [],
   selectedJob: null,
+  reftestUrl: null,
   errors: [],
   bugSuggestionsLoading: false,
   jobLogUrls: [],
   logParseStatus: 'pending',
+  lvFullUrl: null,
 };
-
-treeherder.component('failureSummaryTab', react2angular(
-  FailureSummaryTab,
-  ['fileBug', 'suggestions', 'selectedJob', 'errors', 'bugSuggestionsLoading', 'jobLogUrls', 'logParseStatus'],
-  ['$injector']));

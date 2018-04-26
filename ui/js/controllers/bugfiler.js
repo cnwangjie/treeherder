@@ -43,15 +43,15 @@ treeherder.controller('BugFilerCtrl', [
             $scope.reftest = reftest;
         }
 
-        $scope.unhelpfulSummaryReason = function () {
-            if (search_terms.length === 0) {
-                return "Selected failure does not contain any searchable terms.";
-            }
-            if (search_terms.every(term => !$scope.modalSummary.includes(term))) {
-                return "Summary does not include the full text of any of the selected failure's search terms:";
-            }
-            return "";
-        };
+        // $scope.unhelpfulSummaryReason = function () {
+        //     if (search_terms.length === 0) {
+        //         return "Selected failure does not contain any searchable terms.";
+        //     }
+        //     if (search_terms.every(term => !$scope.modalSummary.includes(term))) {
+        //         return "Summary does not include the full text of any of the selected failure's search terms:";
+        //     }
+        //     return "";
+        // };
 
         /**
          *  Pre-fill the form with information/metadata from the failure
@@ -153,11 +153,11 @@ treeherder.controller('BugFilerCtrl', [
         }
         $scope.modalSummary = "Intermittent " + summaryString;
 
-        $scope.toggleFilerSummaryVisibility = function () {
-            $scope.isFilerSummaryVisible = !$scope.isFilerSummaryVisible;
-        };
-
-        $scope.isFilerSummaryVisible = false;
+        // $scope.toggleFilerSummaryVisibility = function () {
+        //     $scope.isFilerSummaryVisible = !$scope.isFilerSummaryVisible;
+        // };
+        //
+        // $scope.isFilerSummaryVisible = false;
 
         // Add a product/component pair to suggestedProducts
         const addProduct = function (product) {

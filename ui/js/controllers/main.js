@@ -7,14 +7,14 @@ import { thTitleSuffixLimit, thDefaultRepo, thJobNavSelectors, thEvents } from "
 
 treeherderApp.controller('MainCtrl', [
     '$scope', '$rootScope', '$location', '$timeout', '$q',
-    'ThRepositoryModel', 'thPinboard', 'thTabs', '$document',
+    'ThRepositoryModel', '$document',
     'thClassificationTypes', '$interval', '$window',
     'thJobFilters', 'ThResultSetStore',
     '$http',
     '$httpParamSerializer',
     function MainController(
         $scope, $rootScope, $location, $timeout, $q,
-        ThRepositoryModel, thPinboard, thTabs, $document,
+        ThRepositoryModel, $document,
         thClassificationTypes, $interval, $window,
         thJobFilters, ThResultSetStore,
         $http,
@@ -144,17 +144,6 @@ treeherderApp.controller('MainCtrl', [
             return title;
         };
 
-        $rootScope.closeJob = function () {
-            // Setting the selectedJob to null closes the bottom panel
-            $rootScope.selectedJob = null;
-
-            // Clear the selected job display style
-            $rootScope.$emit(thEvents.clearSelectedJob);
-
-            // Reset selected job to null to initialize nav position
-            ThResultSetStore.setSelectedJob();
-        };
-
         $scope.repoModel = ThRepositoryModel;
 
         /**
@@ -276,11 +265,9 @@ treeherderApp.controller('MainCtrl', [
         const keyShortcuts = [
             // Shortcut: select all remaining unverified lines on the current job
             ['a', () => {
-                if (thTabs.selectedTab === "autoClassification") {
-                    $scope.$evalAsync($rootScope.$emit(thEvents.autoclassifyChangeSelection,
-                                                       'all_next',
-                                                       false));
-                }
+                $scope.$evalAsync($rootScope.$emit(thEvents.autoclassifyChangeSelection,
+                                                   'all_next',
+                                                   false));
             }],
 
             // Shortcut: pin selected job to pinboard and add a related bug
@@ -328,9 +315,7 @@ treeherderApp.controller('MainCtrl', [
 
             // Shortcut: toggle edit mode for selected lines
             ['e', () => {
-                if (thTabs.selectedTab === "autoClassification") {
-                    $scope.$evalAsync($rootScope.$emit(thEvents.autoclassifyToggleEdit));
-                }
+                $scope.$evalAsync($rootScope.$emit(thEvents.autoclassifyToggleEdit));
             }],
 
             // Shortcut: enter a quick filter
@@ -354,9 +339,7 @@ treeherderApp.controller('MainCtrl', [
 
             // Shortcut: ignore selected in the autoclasify panel
             ['shift+i', () => {
-                if (thTabs.selectedTab === "autoClassification") {
-                    $scope.$evalAsync($rootScope.$emit(thEvents.autoclassifyIgnore));
-                }
+                $scope.$evalAsync($rootScope.$emit(thEvents.autoclassifyIgnore));
             }],
 
             // Shortcut: select next unclassified failure
@@ -368,11 +351,9 @@ treeherderApp.controller('MainCtrl', [
 
             // Shortcut: select next unverified log line
             [['down', 'shift+down'], (ev) => {
-                if (thTabs.selectedTab === "autoClassification") {
-                    $scope.$evalAsync($rootScope.$emit(thEvents.autoclassifyChangeSelection,
-                                                       'next',
-                                                       !ev.shiftKey));
-                }
+                $scope.$evalAsync($rootScope.$emit(thEvents.autoclassifyChangeSelection,
+                                                   'next',
+                                                   !ev.shiftKey));
             }],
 
             // Shortcut: select previous unclassified failure
@@ -384,20 +365,14 @@ treeherderApp.controller('MainCtrl', [
 
             // Shortcut: select previous unverified log line
             [['up', 'shift+up'], (ev) => {
-                if (thTabs.selectedTab === "autoClassification") {
-                    $scope.$evalAsync($rootScope.$emit(thEvents.autoclassifyChangeSelection,
-                                                       'previous',
-                                                       !ev.shiftKey));
-                }
+                $scope.$evalAsync($rootScope.$emit(thEvents.autoclassifyChangeSelection,
+                                                   'previous',
+                                                   !ev.shiftKey));
             }],
 
             // Shortcut: open the logviewer for the selected job
             ['l', () => {
-                if (thTabs.selectedTab === "autoClassification") {
-                    $scope.$evalAsync($rootScope.$emit(thEvents.autoclassifyOpenLogViewer));
-                } else if ($scope.selectedJob) {
-                    $scope.$evalAsync($rootScope.$emit(thEvents.openLogviewer));
-                }
+                $scope.$evalAsync($rootScope.$emit(thEvents.openLogviewer));
             }],
 
             // Shortcut: Next/prev unclassified failure
@@ -415,9 +390,7 @@ treeherderApp.controller('MainCtrl', [
 
             // Shortcut: save all in the autoclasify panel
             ['s', () => {
-                if (thTabs.selectedTab === "autoClassification") {
-                    $scope.$evalAsync($rootScope.$emit(thEvents.autoclassifySaveAll));
-                }
+                $scope.$evalAsync($rootScope.$emit(thEvents.autoclassifySaveAll));
             }],
 
             // Shortcut: select next job tab
@@ -441,17 +414,13 @@ treeherderApp.controller('MainCtrl', [
 
             // Shortcut: toggle more/fewer options in the autoclassify panel
             ['x', () => {
-                if (thTabs.selectedTab === "autoClassification") {
-                    $scope.$evalAsync($rootScope.$emit(thEvents.autoclassifyToggleExpandOptions));
-                }
+                $scope.$evalAsync($rootScope.$emit(thEvents.autoclassifyToggleExpandOptions));
             }],
 
             // Shortcut: ignore selected in the autoclasify panel
             [['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'o'], (ev) => {
-                if (thTabs.selectedTab === "autoClassification") {
-                    $scope.$evalAsync($rootScope.$emit(thEvents.autoclassifySelectOption,
-                                                       ev.key === "o" ? "manual" : ev.key));
-                }
+                $scope.$evalAsync($rootScope.$emit(thEvents.autoclassifySelectOption,
+                                                   ev.key === "o" ? "manual" : ev.key));
             }],
 
             // Shortcut: select previous job
@@ -484,7 +453,7 @@ treeherderApp.controller('MainCtrl', [
 
             // Shortcut: escape closes any open panels and clears selected job
             ['escape', () => {
-                $scope.$evalAsync($scope.closeJob());
+                $scope.$evalAsync($rootScope.$emit(thEvents.clearSelectedJob));
                 $scope.$evalAsync($scope.setOnscreenShortcutsShowing(false));
             }],
 
@@ -691,8 +660,6 @@ treeherderApp.controller('MainCtrl', [
             $scope.onscreenOverlayShowing = tf;
         };
 
-        $scope.pinboardCount = thPinboard.count;
-        $scope.pinnedJobs = thPinboard.pinnedJobs;
         $scope.jobFilters = thJobFilters;
 
         $scope.isShowDuplicateJobs = function () {

@@ -17,6 +17,7 @@ export default class JobLogUrlModel {
           elem.buildUrl = buildUrl;
           return new JobLogUrlModel(elem);
         })
-    )));
+      )
+    ));
   }
 }

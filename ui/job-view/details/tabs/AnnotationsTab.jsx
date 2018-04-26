@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { react2angular } from 'react2angular/index.es2015';
 
-import treeherder from '../../../js/treeherder';
 import { getBugUrl } from '../../../helpers/url';
-import { thEvents } from '../../../js/constants';
+import { thEvents } from "../../../js/constants";
 
 function RelatedBugSaved(props) {
   const { deleteBug, bug } = props;
@@ -48,7 +46,7 @@ function RelatedBug(props) {
           <li key={bug.bug_id}>
             <RelatedBugSaved
               bug={bug}
-              deleteBug={deleteBug}
+              deleteBug={() => deleteBug(bug)}
             />
           </li>))}
       </ul>
@@ -144,16 +142,16 @@ export default class AnnotationsTab extends React.Component {
     super(props);
 
     const { $injector } = props;
-    this.$rootScope = $injector.get('$rootScope');
     this.thNotify = $injector.get('thNotify');
     this.ThResultSetStore = $injector.get('ThResultSetStore');
+    this.$rootScope = $injector.get('$rootScope');
 
   }
 
   componentDidMount() {
     const { classifications, bugs } = this.props;
 
-    this.$rootScope.$on(thEvents.deleteClassification, () => {
+    this.deleteClassificationUnlisten = this.$rootScope.$on(thEvents.deleteClassification, () => {
       if (classifications[0]) {
         this.deleteClassification(classifications[0]);
         // Delete any number of bugs if they exist
@@ -165,6 +163,10 @@ export default class AnnotationsTab extends React.Component {
 
     this.deleteBug = this.deleteBug.bind(this);
     this.deleteClassification = this.deleteClassification.bind(this);
+  }
+
+  componentWillUnmount() {
+    this.deleteClassificationUnlisten();
   }
 
   deleteClassification(classification) {
@@ -199,22 +201,11 @@ export default class AnnotationsTab extends React.Component {
 
     bug.destroy()
       .then(() => {
-        this.thNotify.send(
-            `Association to bug ${bug.bug_id} successfully deleted`,
-            'success'
-          );
-        this.$rootScope.$emit(
-            thEvents.bugsAssociated,
-            { jobs: { [selectedJob.id]: selectedJob } }
-          );
+        this.thNotify.send(`Association to bug ${bug.bug_id} successfully deleted`, 'success');
+        this.$rootScope.$emit(thEvents.bugsAssociated, { jobs: { [selectedJob.id]: selectedJob } });
       }, () => {
-        this.thNotify.send(
-            `Association to bug ${bug.bug_id} deletion failed`,
-            'danger',
-            { sticky: true }
-          );
-      }
-      );
+        this.thNotify.send(`Association to bug ${bug.bug_id} deletion failed`, 'danger', { sticky: true });
+      });
   }
 
   render() {
@@ -227,7 +218,7 @@ export default class AnnotationsTab extends React.Component {
     return (
       <div className="container-fluid">
         <div className="row h-100">
-          <div className="col-sm-10 classifications-pane job-tabs-content">
+          <div className="col-sm-10 classifications-pane">
             {classifications.length ?
               <AnnotationsTable
                 classifications={classifications}
@@ -255,18 +246,11 @@ export default class AnnotationsTab extends React.Component {
 AnnotationsTab.propTypes = {
   $injector: PropTypes.object.isRequired,
   classificationTypes: PropTypes.object.isRequired,
-  classifications: PropTypes.array,
-  bugs: PropTypes.array,
+  bugs: PropTypes.array.isRequired,
+  classifications: PropTypes.array.isRequired,
   selectedJob: PropTypes.object,
 };
 
 AnnotationsTab.defaultProps = {
-  classifications: [],
-  bugs: [],
   selectedJob: null,
 };
-
-treeherder.component('annotationsTab', react2angular(
-  AnnotationsTab,
-  ['classificationTypes', 'classifications', 'bugs', 'selectedJob'],
-  ['$injector']));

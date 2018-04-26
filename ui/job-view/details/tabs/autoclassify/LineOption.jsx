@@ -76,12 +76,13 @@ export default class LineOption extends React.Component {
       optionModel,
       selectedOption,
       canClassify,
-      pinBoard,
       onOptionChange,
       onIgnoreAlwaysChange,
       ignoreAlways,
       manualBugNumber,
       onManualBugNumberChange,
+      pinnedJobs,
+      addBug,
     } = this.props;
     const option = optionModel;
 
@@ -105,10 +106,10 @@ export default class LineOption extends React.Component {
               className={canClassify ? '' : 'hidden'}
             />}
             {!!option.bugNumber && <span className="line-option-text">
-              {(!canClassify || pinBoard.isPinned(job)) &&
+              {(!canClassify || job.id in pinnedJobs) &&
                 <button
                   className="btn btn-xs btn-light-bordered"
-                  onClick={() => pinBoard.addBug({ id: option.bugNumber }, job)}
+                  onClick={() => addBug({ id: option.bugNumber }, job)}
                   title="add to list of bugs to associate with all pinned jobs"
                 ><i className="fa fa-thumb-tack" /></button>}
               {!!option.bugResolution &&
@@ -176,7 +177,6 @@ export default class LineOption extends React.Component {
           </Label>
         </FormGroup>
 
-
         {option.type === 'classifiedFailure' && <div className="classification-matchers">
           Matched by:
           {option.matches && option.matches.map(match => (<span key={match.matcher.id}>
@@ -196,9 +196,10 @@ LineOption.propTypes = {
   optionModel: PropTypes.object.isRequired,
   canClassify: PropTypes.bool.isRequired,
   ignoreAlways: PropTypes.bool.isRequired,
-  pinBoard: PropTypes.object.isRequired,
   selectedOption: PropTypes.object.isRequired,
   onOptionChange: PropTypes.func.isRequired,
+  pinnedJobs: PropTypes.object.isRequired,
+  addBug: PropTypes.func.isRequired,
   onIgnoreAlwaysChange: PropTypes.func,
   onManualBugNumberChange: PropTypes.func,
   manualBugNumber: PropTypes.number,
