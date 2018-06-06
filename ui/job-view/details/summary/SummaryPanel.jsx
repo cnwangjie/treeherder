@@ -101,7 +101,7 @@ export default class SummaryPanel extends React.Component {
     }
 
     return (
-      <div id="job-details-panel">
+      <div id="summary-panel">
         <ActionBar
           repoName={repoName}
           selectedJob={selectedJob}

@@ -209,7 +209,7 @@ div#details-panel .details-panel-navbar > li.active a:focus {
 
 #details-panel #job-details-list,
 #details-panel .failure-summary-list,
-#details-panel .similar-jobs > .left-panel tbody {
+#details-panel .similar-jobs > .similar-job-list tbody {
   overflow-y: auto;
   height: 100%;
 }
@@ -222,7 +222,7 @@ div#details-panel .details-panel-navbar > li.active a:focus {
   flex-flow: row;
 }
 
-#job-details-panel {
+#summary-panel {
   background-color: #fff;
   display: flex;
   flex-flow: column;
@@ -300,24 +300,24 @@ div#details-panel .details-panel-navbar > li.active a:focus {
   overflow-y: auto;
 }
 
-#job-details-panel {
+#summary-panel {
   width: 260px;
   min-width: 260px;
   height: 100%;
 }
 
-#job-details-panel .content-spacer {
+#summary-panel .content-spacer {
   padding-top: 2px;
   padding-bottom: 4px;
 }
 
-#job-details-panel ul li {
+#summary-panel ul li {
   padding: 0 0 0 5px;
   line-height: 15px;
   word-wrap: break-word;
 }
 
-#job-details-panel ul li label {
+#summary-panel ul li label {
   padding: 0 3px 0 0;
   margin: 2px 0;
   font-weight: bold;
@@ -368,7 +368,7 @@ div#details-panel .details-panel-navbar > li.active a:focus {
   color: grey;
 }
 
-#job-details-panel em.testfail {
+#summary-panel em.testfail {
   color: red;
 }
 
@@ -523,43 +523,43 @@ annotations-tab {
   height: 100%;
 }
 
-div.similar-jobs .right_panel {
+div.similar-jobs .similar-job-detail-panel {
   border-left: 1px solid #101010;
   margin-right: 1px;
   overflow-y: auto;
   flex: 1 1;
 }
 
-div.similar-jobs .right_panel form {
+div.similar-jobs .similar-job-detail-panel form {
   overflow: hidden;
   background-color: #D3D3D3;
 }
 
-div.similar-jobs .right_panel form .checkbox input[type="checkbox"] {
+div.similar-jobs .similar-job-detail-panel form .checkbox input[type="checkbox"] {
   margin-left: 0;
   position: relative;
 }
 
-div.similar-jobs .right_panel .similar_job_detail {
+div.similar-jobs .similar-job-detail-panel .similar_job_detail {
   border-top: 1px solid #101010;
 }
 
-div.similar-jobs .right_panel .similar_job_detail table {
+div.similar-jobs .similar-job-detail-panel .similar_job_detail table {
   width: 100%;
   overflow: hidden;
 }
 
-div.similar-jobs .left-panel {
+div.similar-jobs .similar-job-list {
   overflow: auto;
   flex: 1 1;
 }
 
-div.similar-jobs .left-panel table {
+div.similar-jobs .similar-job-list table {
   margin-bottom: 7px;
 }
 
 /* We override bootstrap table style for cleaner layout */
-div.similar-jobs .left-panel table tr > td {
+div.similar-jobs .similar-job-list table tr > td {
   vertical-align: middle;
   border-top: 1px solid lightgrey;
   border-bottom: 0;
@@ -568,14 +568,14 @@ div.similar-jobs .left-panel table tr > td {
 }
 
 /* Selected Similar Job row in blue */
-div.similar-jobs .left-panel table tr.active > td {
+div.similar-jobs .similar-job-list table tr.active > td {
   background: #e2ebfa;
   border-top: 1px solid darkgrey;
   border-bottom: 1px solid darkgrey;
 }
 
 /* Avoid using the hand pointer unless we are on a link */
-div.similar-jobs .left-panel table tr {
+div.similar-jobs .similar-job-list table tr {
   cursor: default;
 }
 

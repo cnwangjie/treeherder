@@ -135,7 +135,7 @@ export default class SimilarJobsTab extends React.Component {
 
     return (
       <div className="similar-jobs w-100">
-        <div className="left-panel">
+        <div className="similar-job-list">
           <table className="table table-super-condensed table-hover">
             <thead>
               <tr>
@@ -182,7 +182,7 @@ export default class SimilarJobsTab extends React.Component {
             onClick={this.showNext}
           >Show previous jobs</button>}
         </div>
-        <div className="right_panel">
+        <div className="similar-job-detail-panel">
           <form className="form form-inline">
             <div className="checkbox">
               <input
