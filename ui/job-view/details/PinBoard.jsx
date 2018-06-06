@@ -2,16 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, FormGroup, Input, FormFeedback } from 'reactstrap';
 import $ from 'jquery';
-import Mousetrap from "mousetrap";
+import Mousetrap from 'mousetrap';
 
-import { getBtnClass, getStatus } from '../../../helpers/job';
-import { getBugUrl } from '../../../helpers/url';
-import { thEvents } from "../../../js/constants";
-import JobClassificationModel from '../../../models/classification';
-import BugJobMapModel from '../../../models/bugJobMap';
-import { formatModelError } from "../../../helpers/errorMessage";
+import { getBtnClass, getStatus } from '../../helpers/job';
+import { getBugUrl } from '../../helpers/url';
+import { thEvents } from '../../js/constants';
+import JobClassificationModel from '../../models/classification';
+import BugJobMapModel from '../../models/bugJobMap';
+import { formatModelError } from '../../helpers/errorMessage';
 
-class PinBoard extends React.Component {
+export default class PinBoard extends React.Component {
   constructor(props) {
     super(props);
 
@@ -50,7 +50,7 @@ class PinBoard extends React.Component {
     const duration = Math.round((job.end_timestamp - job.start_timestamp) / 60);
     const status = getStatus(job);
 
-    return job.job_type_name + " - " + status + " - " + duration + "mins";
+    return `${job.job_type_name} - ${status} - ${duration} mins`;
   }
 
   getBtnClass(job) {
@@ -81,15 +81,15 @@ class PinBoard extends React.Component {
       // just forgot to hit enter. Returns false if invalid
       errorFree = this.saveEnteredBugNumber();
       if (!errorFree) {
-        this.$timeout(this.thNotify.send("Please enter a valid bug number", "danger"));
+        this.$timeout(this.thNotify.send('Please enter a valid bug number', 'danger'));
       }
     }
     if (!this.canSaveClassifications() && isLoggedIn) {
-      this.$timeout(this.thNotify.send("Please classify this failure before saving", "danger"));
+      this.$timeout(this.thNotify.send('Please classify this failure before saving', 'danger'));
       errorFree = false;
     }
     if (!isLoggedIn) {
-      this.$timeout(this.thNotify.send("Must be logged in to save job classifications", "danger"));
+      this.$timeout(this.thNotify.send('Must be logged in to save job classifications', 'danger'));
       errorFree = false;
     }
     if (errorFree) {
@@ -134,10 +134,10 @@ class PinBoard extends React.Component {
 
       classification.job_id = job.id;
       return classification.create().then(() => {
-          this.thNotify.send(`Classification saved for ${job.platform} ${job.job_type_name}`, "success");
+          this.thNotify.send(`Classification saved for ${job.platform} ${job.job_type_name}`, 'success');
         }).catch((response) => {
           const message = `Error saving classification for ${job.platform} ${job.job_type_name}`;
-          this.thNotify.send(formatModelError(response, message), "danger");
+          this.thNotify.send(formatModelError(response, message), 'danger');
         });
     }
   }
@@ -154,22 +154,22 @@ class PinBoard extends React.Component {
 
       bjm.create()
         .then(() => {
-          this.thNotify.send(`Bug association saved for ${job.platform} ${job.job_type_name}`, "success");
+          this.thNotify.send(`Bug association saved for ${job.platform} ${job.job_type_name}`, 'success');
         })
         .catch((response) => {
           const message = `Error saving bug association for ${job.platform} ${job.job_type_name}`;
-          this.thNotify.send(formatModelError(response, message), "danger");
+          this.thNotify.send(formatModelError(response, message), 'danger');
       });
     });
   }
 
   isSHAorCommit(str) {
-    return /^[a-f\d]{12,40}$/.test(str) || str.includes("hg.mozilla.org");
+    return /^[a-f\d]{12,40}$/.test(str) || str.includes('hg.mozilla.org');
   }
 
   // If the pasted data is (or looks like) a 12 or 40 char SHA,
   // or if the pasted data is an hg.m.o url, automatically select
-  // the "fixed by commit" classification type
+  // the 'fixed by commit' classification type
   pasteSHA(evt) {
     const pastedData = evt.originalEvent.clipboardData.getData('text');
     if (this.isSHAorCommit(pastedData)) {
@@ -184,12 +184,12 @@ class PinBoard extends React.Component {
 
   cancelAllPinnedJobsTitle() {
     if (!this.props.isLoggedIn) {
-      return "Not logged in";
+      return 'Not logged in';
     } else if (!this.canCancelAllPinnedJobs()) {
-      return "No pending / running jobs in pinBoard";
+      return 'No pending / running jobs in pinBoard';
     }
 
-    return "Cancel all the pinned jobs";
+    return 'Cancel all the pinned jobs';
   }
 
   canCancelAllPinnedJobs() {
@@ -212,7 +212,7 @@ class PinBoard extends React.Component {
       (!!Object.keys(pinnedJobBugs).length ||
         (thisClass.failure_classification_id !== 4 && thisClass.failure_classification_id !== 2) ||
         this.$rootScope.currentRepo.is_try_repo ||
-        this.$rootScope.currentRepo.repository_group.name === "project repositories" ||
+        this.$rootScope.currentRepo.repository_group.name === 'project repositories' ||
         (thisClass.failure_classification_id === 4 && thisClass.text.length > 0) ||
         (thisClass.failure_classification_id === 2 && thisClass.text.length > 7));
   }
@@ -226,31 +226,31 @@ class PinBoard extends React.Component {
 
   // Dynamic btn/anchor title for classification save
   saveUITitle(category) {
-    let title = "";
+    let title = '';
 
     if (!this.props.isLoggedIn) {
-      title = title.concat("not logged in / ");
+      title = title.concat('not logged in / ');
     }
 
-    if (category === "classification") {
+    if (category === 'classification') {
       if (!this.canSaveClassifications()) {
-        title = title.concat("ineligible classification data / ");
+        title = title.concat('ineligible classification data / ');
       }
       if (!this.hasPinnedJobs()) {
-        title = title.concat("no pinned jobs");
+        title = title.concat('no pinned jobs');
       }
       // We don't check pinned jobs because the menu dropdown handles it
-    } else if (category === "bug") {
+    } else if (category === 'bug') {
       if (!this.hasPinnedJobBugs()) {
-        title = title.concat("no related bugs");
+        title = title.concat('no related bugs');
       }
     }
 
-    if (title === "") {
-      title = "Save " + category + " data";
+    if (title === '') {
+      title = `Save ${category} data`;
     } else {
-      // Cut off trailing "/ " if one exists, capitalize first letter
-      title = title.replace(/\/ $/, "");
+      // Cut off trailing '/ ' if one exists, capitalize first letter
+      title = title.replace(/\/ $/, '');
       title = title.replace(/^./, l => l.toUpperCase());
     }
     return title;
@@ -265,7 +265,7 @@ class PinBoard extends React.Component {
   }
 
   handleRelatedBugDocumentClick(event) {
-    if (!$(event.target).hasClass("add-related-bugs-input")) {
+    if (!$(event.target).hasClass('add-related-bugs-input')) {
       this.saveEnteredBugNumber();
 
       $(document).off('click', this.handleRelatedBugDocumentClick);
@@ -299,7 +299,7 @@ class PinBoard extends React.Component {
   }
 
   completeClassification() {
-    this.$rootScope.$broadcast('blur-this', "classification-comment");
+    this.$rootScope.$broadcast('blur-this', 'classification-comment');
   }
 
   isNumber(text) {
@@ -553,5 +553,3 @@ PinBoard.defaultProps = {
   classificationTypes: null,
   revisionList: [],
 };
-
-export default PinBoard;

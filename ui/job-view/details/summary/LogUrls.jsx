@@ -6,21 +6,21 @@ function getLogUrlProps(logUrl, lvUrl, lvFullUrl) {
   switch (logUrl.parse_status) {
     case 'parsed':
       return {
-        target: "_blank",
-        rel: "noopener",
+        target: '_blank',
+        rel: 'noopener',
         href: lvUrl,
-        "copy-value": lvFullUrl,
-        title: "Open the log viewer in a new window"
+        'copy-value': lvFullUrl,
+        title: 'Open the log viewer in a new window'
       };
     case 'failed':
       return {
-        className: "disabled",
-        title: "Log parsing has failed",
+        className: 'disabled',
+        title: 'Log parsing has failed',
       };
     case 'pending':
       return {
-        className: "disabled",
-        title: "Log parsing in progress"
+        className: 'disabled',
+        title: 'Log parsing in progress'
       };
   }
 }

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import ErrorsList from './ErrorsList';
 import SuggestionsListItem from './SuggestionsListItem';
 import ListItem from './ListItem';
-import { isReftest } from "../../../../helpers/job";
+import { isReftest } from '../../../../helpers/job';
 import intermittentTemplate from '../../../../partials/main/intermittent.html';
 import { thEvents } from '../../../../js/constants';
 import { getBugUrl } from '../../../../helpers/url';
@@ -25,20 +25,20 @@ export default class FailureSummaryTab extends React.Component {
     const summary = suggestion.search;
     const crashRegex = /application crashed \[@ (.+)\]$/g;
     const crash = summary.match(crashRegex);
-    const crashSignatures = crash ? [crash[0].split("application crashed ")[1]] : [];
-    const allFailures = suggestions.map(sugg => (sugg.search.split(" | ")));
+    const crashSignatures = crash ? [crash[0].split('application crashed ')[1]] : [];
+    const allFailures = suggestions.map(sugg => (sugg.search.split(' | ')));
 
     const modalInstance = this.$uibModal.open({
       template: intermittentTemplate,
       controller: 'BugFilerCtrl',
       size: 'lg',
-      openedClass: "filer-open",
+      openedClass: 'filer-open',
       resolve: {
         summary: () => (summary),
         search_terms: () => (suggestion.search_terms),
         fullLog: () => (jobLogUrls[0].url),
         parsedLog: () => (lvFullUrl),
-        reftest: () => (isReftest(selectedJob) ? reftestUrl : ""),
+        reftest: () => (isReftest(selectedJob) ? reftestUrl : ''),
         selectedJob: () => (selectedJob),
         allFailures: () => (allFailures),
         crashSignatures: () => (crashSignatures),

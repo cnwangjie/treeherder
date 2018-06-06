@@ -15,8 +15,7 @@ export default function ClassificationsPanel(props) {
   const repo = ThRepositoryModel.getRepo(repoName);
   const repoURLHTML = { __html: linkifyRevisions(classification.text, repo) };
   const failureId = classification.failure_classification_id;
-  const iconClass = (failureId === 7 ?
-    "fa-star-o" : "fa fa-star") + " star-" + job.result;
+  const iconClass = `${(failureId === 7 ? 'fa-star-o' : 'fa fa-star')} star-${job.result}`;
   const classificationName = classificationTypes.classifications[failureId];
 
   return (

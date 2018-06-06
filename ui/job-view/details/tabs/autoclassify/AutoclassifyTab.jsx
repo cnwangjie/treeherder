@@ -6,8 +6,8 @@ import ErrorLineData from './ErrorLineModel';
 import AutoclassifyToolbar from './AutoclassifyToolbar';
 import ErrorLine from './ErrorLine';
 import TextLogErrorsModel from '../../../../models/textLogErrors';
-import { getLogViewerUrl, getApiUrl, getProjectJobUrl } from "../../../../helpers/url";
-import { thEvents } from "../../../../js/constants";
+import { getLogViewerUrl, getApiUrl, getProjectJobUrl } from '../../../../helpers/url';
+import { thEvents } from '../../../../js/constants';
 
 export default class AutoclassifyTab extends React.Component {
   static getDerivedStateFromProps(nextProps) {

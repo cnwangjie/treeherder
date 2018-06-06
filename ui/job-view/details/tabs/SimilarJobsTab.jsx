@@ -135,7 +135,7 @@ export default class SimilarJobsTab extends React.Component {
 
     return (
       <div className="similar-jobs w-100">
-        <div className="left_panel">
+        <div className="left-panel">
           <table className="table table-super-condensed table-hover">
             <thead>
               <tr>

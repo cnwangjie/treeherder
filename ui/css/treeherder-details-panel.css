@@ -209,7 +209,7 @@ div#details-panel .details-panel-navbar > li.active a:focus {
 
 #details-panel #job-details-list,
 #details-panel .failure-summary-list,
-#details-panel .similar-jobs > .left_panel tbody {
+#details-panel .similar-jobs > .left-panel tbody {
   overflow-y: auto;
   height: 100%;
 }
@@ -222,13 +222,13 @@ div#details-panel .details-panel-navbar > li.active a:focus {
   flex-flow: row;
 }
 
-#job-details-panel, #job-tabs-panel {
+#job-details-panel {
   background-color: #fff;
   display: flex;
   flex-flow: column;
 }
 
-#job-details-actionbar, #job-tabs-navbar {
+#job-details-actionbar {
   min-height: 33px;
 }
 
@@ -403,38 +403,6 @@ div#details-panel .details-panel-navbar > li.active a:focus {
   border-left: 1px solid lightgrey;
 }
 
-.job-tabs-content {
-  padding: 2px 4px 0;
-}
-
-#job-tabs-panel {
-  flex: 1 6;
-  padding: 0;
-  min-width: 565px;
-}
-
-#job-tabs-pane {
-  max-height: calc(100% - 33px);
-  flex: 1;
-  display: flex;
-  overflow: auto;
-}
-
-#job-tabs-pane > * {
-  flex: 1;
-  display: flex;
-}
-
-#job-tabs-pane > * > * {
-  flex: 1;
-  display: flex;
-}
-
-#job-tabs-pane > * > * > * {
-  flex: 1;
-  display: flex;
-}
-
 /*
  * Failure summary
  */
@@ -581,17 +549,17 @@ div.similar-jobs .right_panel .similar_job_detail table {
   overflow: hidden;
 }
 
-div.similar-jobs .left_panel {
+div.similar-jobs .left-panel {
   overflow: auto;
   flex: 1 1;
 }
 
-div.similar-jobs .left_panel table {
+div.similar-jobs .left-panel table {
   margin-bottom: 7px;
 }
 
 /* We override bootstrap table style for cleaner layout */
-div.similar-jobs .left_panel table tr > td {
+div.similar-jobs .left-panel table tr > td {
   vertical-align: middle;
   border-top: 1px solid lightgrey;
   border-bottom: 0;
@@ -600,14 +568,14 @@ div.similar-jobs .left_panel table tr > td {
 }
 
 /* Selected Similar Job row in blue */
-div.similar-jobs .left_panel table tr.active > td {
+div.similar-jobs .left-panel table tr.active > td {
   background: #e2ebfa;
   border-top: 1px solid darkgrey;
   border-bottom: 1px solid darkgrey;
 }
 
 /* Avoid using the hand pointer unless we are on a link */
-div.similar-jobs .left_panel table tr {
+div.similar-jobs .left-panel table tr {
   cursor: default;
 }
 

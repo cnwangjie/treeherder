@@ -6,9 +6,9 @@ import { FormGroup } from 'reactstrap';
 import LineOption from './LineOption';
 import LineOptionModel from './LineOptionModel';
 import StaticLineOption from './StaticLineOption';
-import { getBugUrl, getLogViewerUrl } from "../../../../helpers/url";
-import { stringOverlap, highlightLogLine } from "../../../../helpers/autoclassify";
-import { thEvents } from "../../../../js/constants";
+import { getBugUrl, getLogViewerUrl } from '../../../../helpers/url';
+import { stringOverlap, highlightLogLine } from '../../../../helpers/autoclassify';
+import { thEvents } from '../../../../js/constants';
 
 const GOOD_MATCH_SCORE = 0.75;
 const BAD_MATCH_SCORE = 0.25;

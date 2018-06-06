@@ -68,8 +68,8 @@ export default class SuggestionsListItem extends React.Component {
                 bug={bug}
                 selectedJob={selectedJob}
                 suggestion={suggestion}
-                bugClassName={bug.resolution !== "" ? "deleted" : ""}
-                title={bug.resolution !== "" ? bug.resolution : ""}
+                bugClassName={bug.resolution !== '' ? 'deleted' : ''}
+                title={bug.resolution !== '' ? bug.resolution : ''}
                 addBug={addBug}
               />))}
           </ul>}

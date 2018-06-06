@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { react2angular } from "react2angular/index.es2015";
+import { react2angular } from 'react2angular/index.es2015';
 import { chunk, flatten } from 'lodash';
 import $ from 'jquery';
 
 import TabsPanel from './tabs/TabsPanel';
-import treeherder from "../../js/treeherder";
-import { getLogViewerUrl, getReftestUrl } from "../../helpers/url";
+import treeherder from '../../js/treeherder';
+import { getLogViewerUrl, getReftestUrl } from '../../helpers/url';
 import SummaryPanel from './summary/SummaryPanel';
-import PinBoard from './pinboard/PinBoard';
+import PinBoard from './PinBoard';
 import JobClassificationModel from '../../models/classification';
 import JobDetailModel from '../../models/jobDetail';
 import {
@@ -21,7 +21,7 @@ import JobModel from '../../models/job';
 import TextLogStepModel from '../../models/textLogStep';
 import BugSuggestionsModel from '../../models/bugSuggestions';
 import JobLogUrlModel from '../../models/jobLogUrl';
-import BugJobMapModel from "../../models/bugJobMap";
+import BugJobMapModel from '../../models/bugJobMap';
 
 class DetailsPanel extends React.Component {
   constructor(props) {
@@ -29,10 +29,10 @@ class DetailsPanel extends React.Component {
 
     const { $injector } = this.props;
 
-    this.PhSeries = $injector.get("PhSeries");
-    this.ThResultSetStore = $injector.get("ThResultSetStore");
-    this.thClassificationTypes = $injector.get("thClassificationTypes");
-    this.thNotify = $injector.get("thNotify");
+    this.PhSeries = $injector.get('PhSeries');
+    this.ThResultSetStore = $injector.get('ThResultSetStore');
+    this.thClassificationTypes = $injector.get('thClassificationTypes');
+    this.thNotify = $injector.get('thNotify');
     this.$rootScope = $injector.get('$rootScope');
     this.$location = $injector.get('$location');
 
@@ -237,12 +237,12 @@ class DetailsPanel extends React.Component {
       // (i.e. it has a buildbot request id)
       const buildbotRequestIdDetail = jobDetails.find(detail => detail.title === 'buildbot_request_id');
       if (buildbotRequestIdDetail) {
-        jobDetails = [...jobDetails, { title: "Buildername", value: job.ref_data_name }];
+        jobDetails = [...jobDetails, { title: 'Buildername', value: job.ref_data_name }];
       }
 
       // the third result comes from the jobLogUrl promise
       // exclude the json log URLs
-      const jobLogUrls = results[2].filter(log => !log.name.endsWith("_json"));
+      const jobLogUrls = results[2].filter(log => !log.name.endsWith('_json'));
 
       let logParseStatus = 'unavailable';
       // Provide a parse status as a scope variable for logviewer shortcut
@@ -256,7 +256,7 @@ class DetailsPanel extends React.Component {
         false);
 
       const lvUrl = getLogViewerUrl(job.id, repoName);
-      const lvFullUrl = location.origin + "/" + lvUrl;
+      const lvFullUrl = location.origin + '/' + lvUrl;
       const reftestUrl = jobLogUrls.length ?
         `${getReftestUrl(jobLogUrls[0].url)}&only_show_unexpected=1` :
         '';
@@ -306,7 +306,7 @@ class DetailsPanel extends React.Component {
   closeJob() {
     this.$rootScope.selectedJob = null;
     this.ThResultSetStore.setSelectedJob();
-    this.$location.search("selectedJob", null);
+    this.$location.search('selectedJob', null);
     if (this.selectJobController) {
       this.selectJobController.abort();
     }
@@ -328,9 +328,9 @@ class DetailsPanel extends React.Component {
   }
 
   pulsePinCount() {
-    $(".pin-count-group").addClass("pin-count-pulse");
+    $('.pin-count-group').addClass('pin-count-pulse');
     window.setTimeout(() => {
-      $(".pin-count-group").removeClass("pin-count-pulse");
+      $('.pin-count-group').removeClass('pin-count-pulse');
     }, 700);
   }
 
@@ -436,7 +436,6 @@ class DetailsPanel extends React.Component {
           resizer-bottom="#details-panel"
         />
         {isPinBoardVisible && <PinBoard
-          id="pinboard-panel"
           isVisible={isPinBoardVisible}
           isLoggedIn={user.isLoggedIn || false}
           classificationTypes={this.thClassificationTypes}

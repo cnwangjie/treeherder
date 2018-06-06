@@ -190,21 +190,6 @@ select#pinboard-revision-select.classification-select {
   padding: 0;
 }
 
-/*.classification-select.Select .Select-placeholder,*/
-/*.classification-select.Select .Select-value,*/
-/*.classification-select.Select .Select-value-label,*/
-/*.classification-select.Select .Select-input {*/
-  /*line-height: 20px !important;*/
-  /*height: 20px;*/
-/*}*/
-
-/*.classification-option {*/
-  /*line-height: 25px !important;*/
-  /*height: 25px;*/
-/*}*/
-
-
-
 .add-classification-input {
   width: 177px;
   height: 20px;

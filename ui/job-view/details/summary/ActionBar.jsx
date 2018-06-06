@@ -12,7 +12,7 @@ import tcJobActionsTemplate from '../../../partials/main/tcjobactions.html';
 import LogUrls from './LogUrls';
 import JobDetailModel from '../../../models/jobDetail';
 import JobModel from '../../../models/job';
-import { formatModelError, formatTaskclusterError } from "../../../helpers/errorMessage";
+import { formatModelError, formatTaskclusterError } from '../../../helpers/errorMessage';
 
 export default class ActionBar extends React.Component {
   constructor(props) {
@@ -37,11 +37,11 @@ export default class ActionBar extends React.Component {
     this.openLogViewerUnlisten = this.$rootScope.$on(thEvents.openLogviewer, () => {
       switch (logParseStatus) {
         case 'pending':
-          this.thNotify.send("Log parsing in progress, log viewer not yet available", 'info'); break;
+          this.thNotify.send('Log parsing in progress, log viewer not yet available', 'info'); break;
         case 'failed':
-          this.thNotify.send("Log parsing has failed, log viewer is unavailable", 'warning'); break;
+          this.thNotify.send('Log parsing has failed, log viewer is unavailable', 'warning'); break;
         case 'unavailable':
-          this.thNotify.send("No logs available for this job", 'info'); break;
+          this.thNotify.send('No logs available for this job', 'info'); break;
         case 'parsed':
           $('#logviewer-btn')[0].click();
       }
@@ -61,7 +61,7 @@ export default class ActionBar extends React.Component {
 
   canCancel() {
     const { selectedJob } = this.props;
-    return selectedJob.state === "pending" || selectedJob.state === "running";
+    return selectedJob.state === 'pending' || selectedJob.state === 'running';
   }
 
   retriggerJob(jobs) {
@@ -69,10 +69,10 @@ export default class ActionBar extends React.Component {
 
     if (user.isLoggedIn) {
         // Spin the retrigger button when retriggers happen
-        $("#retrigger-btn > span").removeClass("action-bar-spin");
+        $('#retrigger-btn > span').removeClass('action-bar-spin');
         window.requestAnimationFrame(function () {
             window.requestAnimationFrame(function () {
-                $("#retrigger-btn > span").addClass("action-bar-spin");
+                $('#retrigger-btn > span').addClass('action-bar-spin');
             });
         });
 
@@ -84,7 +84,7 @@ export default class ActionBar extends React.Component {
         // to the self serve api (which does not listen over pulse!).
         JobModel.retrigger(repoName, job_id_list).then(() => (
             JobDetailModel.getJobDetails({
-                title: "buildbot_request_id",
+                title: 'buildbot_request_id',
                 repository: repoName,
                 job_id__in: job_id_list.join(',') })
             .then((data) => {
@@ -94,14 +94,14 @@ export default class ActionBar extends React.Component {
                 });
             })
         ).then(() => {
-            this.$timeout(this.thNotify.send("Retrigger request sent", "success"));
+            this.$timeout(this.thNotify.send('Retrigger request sent', 'success'));
         }, (e) => {
             // Generic error eg. the user doesn't have LDAP access
             this.$timeout(this.thNotify.send(
-                formatModelError(e, "Unable to send retrigger"), 'danger'));
+                formatModelError(e, 'Unable to send retrigger'), 'danger'));
         }));
     } else {
-        this.$timeout(this.thNotify.send("Must be logged in to retrigger a job", 'danger'));
+        this.$timeout(this.thNotify.send('Must be logged in to retrigger a job', 'danger'));
     }
   }
 
@@ -112,11 +112,11 @@ export default class ActionBar extends React.Component {
       return;
     }
     if (!user.isLoggedIn) {
-      this.thNotify.send("Must be logged in to backfill a job", 'danger');
+      this.thNotify.send('Must be logged in to backfill a job', 'danger');
       return;
     }
     if (!selectedJob.id) {
-      this.thNotify.send("Job not yet loaded for backfill", 'warning');
+      this.thNotify.send('Job not yet loaded for backfill', 'warning');
       return;
     }
 
@@ -208,22 +208,22 @@ export default class ActionBar extends React.Component {
 
   backfillButtonTitle() {
     const { user, isTryRepo } = this.props;
-    let title = "";
+    let title = '';
 
     if (!user.isLoggedIn) {
-      title = title.concat("must be logged in to backfill a job / ");
+      title = title.concat('must be logged in to backfill a job / ');
     }
 
     if (isTryRepo) {
-      title = title.concat("backfill not available in this repository");
+      title = title.concat('backfill not available in this repository');
     }
 
-    if (title === "") {
-      title = "Trigger jobs of ths type on prior pushes " +
-        "to fill in gaps where the job was not run";
+    if (title === '') {
+      title = 'Trigger jobs of ths type on prior pushes ' +
+        'to fill in gaps where the job was not run';
     } else {
-      // Cut off trailing "/ " if one exists, capitalize first letter
-      title = title.replace(/\/ $/, "");
+      // Cut off trailing '/ ' if one exists, capitalize first letter
+      title = title.replace(/\/ $/, '');
       title = title.replace(/^./, l => l.toUpperCase());
     }
     return title;
@@ -231,8 +231,8 @@ export default class ActionBar extends React.Component {
 
   cancelJobs(jobs) {
     const { repoName } = this.props;
-    const jobIdsToCancel = jobs.filter(job => (job.state === "pending" ||
-      job.state === "running")).map(
+    const jobIdsToCancel = jobs.filter(job => (job.state === 'pending' ||
+      job.state === 'running')).map(
       job => job.id);
     // get buildbot ids of any buildbot jobs we want to cancel
     // first
@@ -249,11 +249,11 @@ export default class ActionBar extends React.Component {
             });
         })
     )).then(() => {
-      this.thNotify.send("Cancel request sent", "success");
+      this.thNotify.send('Cancel request sent', 'success');
     }).catch(function (e) {
       this.thNotify.send(
-        formatModelError(e, "Unable to cancel job"),
-        "danger",
+        formatModelError(e, 'Unable to cancel job'),
+        'danger',
         { sticky: true }
       );
     });

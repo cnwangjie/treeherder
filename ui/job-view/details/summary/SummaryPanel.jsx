@@ -11,7 +11,7 @@ import {
   getJobSearchStrHref,
 } from '../../../helpers/url';
 import { toDateStr } from '../../../helpers/display';
-import { getSearchStr } from "../../../helpers/job";
+import { getSearchStr } from '../../../helpers/job';
 
 export default class SummaryPanel extends React.Component {
   constructor(props) {
@@ -71,7 +71,7 @@ export default class SummaryPanel extends React.Component {
         timeFields.startTime = toDateStr(job.start_timestamp);
         timeFields.duration = duration;
     } else {
-        timeFields.duration = "Not started (queued for " + duration + ")";
+        timeFields.duration = `Not started (queued for ${duration})`;
     }
 
     if (job.end_timestamp) {
@@ -97,7 +97,7 @@ export default class SummaryPanel extends React.Component {
       jobLogUrls[0].buildUrl : buildUrl;
 
     if (selectedJob.job_type_description) {
-      iconCircleClass = "fa fa-info-circle";
+      iconCircleClass = 'fa fa-info-circle';
     }
 
     return (
